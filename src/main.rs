@@ -1,15 +1,15 @@
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![3,0,0,4,0,0,0,8,0],
-                                        vec![9,5,0,0,0,6,4,3,7],
-                                        vec![6,7,0,5,0,0,0,1,0],
-                                        vec![0,0,7,0,3,1,0,6,5],
-                                        vec![0,0,5,6,0,8,0,0,3],
-                                        vec![8,0,0,0,0,0,7,0,1],
-                                        vec![0,0,1,3,0,4,0,0,0],
-                                        vec![4,0,0,0,0,2,1,5,8],
-                                        vec![5,0,0,8,1,9,0,0,4]];
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,0,0,0,0,0]];
     let mut mögliche_nummern=Vec::new();
     for i in 1..länge_eines_quadrats*länge_eines_quadrats+1{
         mögliche_nummern.push(i as i32);
@@ -79,7 +79,6 @@ fn main() {
         println!("\nSolved!");
     }
     else{
-
         for i in 0..spielfeld.len(){
             for d in 0..spielfeld[i].len(){
                 
@@ -99,9 +98,33 @@ fn main() {
             }
             println!();
         }
+        println!("\nCouldnt finish the puzzle!\nNow trying to guess...\n");
+        if !solve_sudoku(&mut spielfeld, länge_eines_quadrats){
+            println!("Couldnt finish it :(\n");
+        }
+        else{
+            for i in 0..spielfeld.len(){
+                for d in 0..spielfeld[i].len(){
+                    
+                    if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
+                        print!(" {} |",spielfeld[i][d]);
+                    }
+                    else{
+                        print!(" {} ",spielfeld[i][d]);
+                    }
+                }
+                if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
+                    println!();
+                    for _i in 0..spielfeld[i].len(){
+                        print!("---");
+                    }
+                    print!("-");
+                }
+                println!();
+            }
+            println!("\nThe final result!");
+        }
 
-
-        println!("\nCouldnt finish the puzzle!");
     }
 }
 
@@ -124,6 +147,58 @@ fn get_gebrauchte_nummern(mögliche_nummern:&Vec<i32>,spielfeld:&Vec<Vec<i32>>,l
     }
     gebrauchte_nummern
 }
+
+fn solve_sudoku(spielfeld:&mut Vec<Vec<i32>>,länge_eines_quadrats:usize)->bool{
+    for col in 0..spielfeld.len(){
+        for row in 0..spielfeld[0].len(){
+            if spielfeld[col][row]==0{
+                for number in 0..länge_eines_quadrats*länge_eines_quadrats+1{
+                    if is_allowed(spielfeld, row, col, number as i32, länge_eines_quadrats){
+                        spielfeld[col][row]=number as i32;
+                        if solve_sudoku(spielfeld, länge_eines_quadrats){
+                            return true;
+                        }
+                        else{
+                            spielfeld[col][row]=0;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+fn is_allowed(spielfeld:&Vec<Vec<i32>>,row:usize,col:usize,number:i32,länge_quadrat:usize)->bool{
+    let mut is_allowed=true;
+    let  r=row-row%länge_quadrat;
+    let c=col-col %länge_quadrat;
+    for i in 0..spielfeld.len(){
+        if spielfeld[i][row]==number{
+            is_allowed=false;
+            break;
+        }
+    }
+    for i in 0..spielfeld[0].len(){
+        if spielfeld[col][i]==number{
+            is_allowed=false;
+            break;
+        }
+    }
+
+    for i in c..c+3{
+        for d in r..r+3{
+            if spielfeld[i][d]==number{
+                is_allowed=false;
+                break;
+            }
+        }
+    }
+
+    return is_allowed;
+}
+
 
 fn iscontained(number:i32,board:&[i32])->bool{
     let mut iscontained = false;
