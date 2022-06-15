@@ -1,15 +1,15 @@
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0]];
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,1,0,0,4,0,0,0],
+                                        vec![0,0,5,0,0,0,0,0,7],
+                                        vec![4,7,0,0,3,0,0,6,0],
+                                        vec![6,4,0,0,0,8,0,0,9],
+                                        vec![1,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,5,0,8,0,0],
+                                        vec![0,0,0,2,0,0,0,3,0],
+                                        vec![0,0,7,0,0,0,0,0,0],
+                                        vec![8,9,0,0,0,5,0,0,6]];
     let mut mögliche_nummern=Vec::new();
     for i in 1..länge_eines_quadrats*länge_eines_quadrats+1{
         mögliche_nummern.push(i as i32);
@@ -57,78 +57,44 @@ fn main() {
     println!();
     if solved{
         println!();
-        for i in 0..spielfeld.len(){
-            for d in 0..spielfeld[i].len(){
-                
-                if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                    print!(" {} |",spielfeld[i][d]);
-                }
-                else{
-                    print!(" {} ",spielfeld[i][d]);
-                }
-            }
-            if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-                println!();
-                for _i in 0..spielfeld[i].len(){
-                    print!("---");
-                }
-                print!("-");
-            }
-            println!();
-        }
+        print_spielfeld(&spielfeld, länge_eines_quadrats);
         println!("\nSolved!");
     }
     else{
-        for i in 0..spielfeld.len(){
-            for d in 0..spielfeld[i].len(){
-                
-                if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                    print!(" {} |",spielfeld[i][d]);
-                }
-                else{
-                    print!(" {} ",spielfeld[i][d]);
-                }
-            }
-            if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-                println!();
-                for _i in 0..spielfeld[i].len(){
-                    print!("---");
-                }
-                print!("-");
-            }
-            println!();
-        }
+        print_spielfeld(&spielfeld, länge_eines_quadrats);
         println!("\nCouldnt finish the puzzle!\nNow trying to guess...\n");
         if !solve_sudoku(&mut spielfeld, länge_eines_quadrats){
             println!("Couldnt finish it :(\n");
         }
         else{
-            for i in 0..spielfeld.len(){
-                for d in 0..spielfeld[i].len(){
-                    
-                    if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                        print!(" {} |",spielfeld[i][d]);
-                    }
-                    else{
-                        print!(" {} ",spielfeld[i][d]);
-                    }
-                }
-                if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-                    println!();
-                    for _i in 0..spielfeld[i].len(){
-                        print!("---");
-                    }
-                    print!("-");
-                }
-                println!();
-            }
+            print_spielfeld(&spielfeld, länge_eines_quadrats);
             println!("\nThe final result!");
         }
 
     }
 }
 
-
+fn print_spielfeld(spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize){
+    for i in 0..spielfeld.len(){
+        for d in 0..spielfeld[i].len(){
+            
+            if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
+                print!(" {} |",spielfeld[i][d]);
+            }
+            else{
+                print!(" {} ",spielfeld[i][d]);
+            }
+        }
+        if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
+            println!();
+            for _i in 0..spielfeld[i].len(){
+                print!("---");
+            }
+            print!("-");
+        }
+        println!();
+    }
+}
 
 fn get_gebrauchte_nummern(mögliche_nummern:&Vec<i32>,spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize)->Vec<Vec<i32>>{
     let mut gebrauchte_nummern:Vec<Vec<i32>>=Vec::new();
