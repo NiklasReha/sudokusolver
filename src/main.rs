@@ -1,15 +1,15 @@
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,0,0,0,0,0]];
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![3,0,0,4,0,0,0,8,0],
+                                        vec![9,5,0,0,0,6,4,3,7],
+                                        vec![6,7,0,5,0,0,0,1,0],
+                                        vec![0,0,7,0,3,1,0,6,5],
+                                        vec![0,0,5,6,0,8,0,0,3],
+                                        vec![8,0,0,0,0,0,7,0,1],
+                                        vec![0,0,1,3,0,4,0,0,0],
+                                        vec![4,0,0,0,0,2,1,5,8],
+                                        vec![5,0,0,8,1,9,0,0,4]];
     let mut mögliche_nummern=Vec::new();
     for i in 1..länge_eines_quadrats*länge_eines_quadrats+1{
         mögliche_nummern.push(i as i32);
@@ -56,176 +56,56 @@ fn main() {
 
     println!();
     if solved{
-        for i in 0..spielfeld.len(){
-            for d in 0..spielfeld[i].len(){
-                
-                if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                    print!(" {} |",spielfeld[i][d]);
-                }
-                else{
-                    print!(" {} ",spielfeld[i][d]);
-                }
-            }
-            if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-                println!();
-                for _i in 0..spielfeld[i].len(){
-                    print!("---");
-                }
-                print!("-");
-            }
-            println!();
-        }
-    }
-    else{
-
-        for i in 0..spielfeld.len(){
-            for d in 0..spielfeld[i].len(){
-                
-                if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                    print!(" {} |",spielfeld[i][d]);
-                }
-                else{
-                    print!(" {} ",spielfeld[i][d]);
-                }
-            }
-            if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-                println!();
-                for _i in 0..spielfeld[i].len(){
-                    print!("---");
-                }
-                print!("-");
-            }
-            println!();
-        }
-
-
-
-
-
-
-        print!("Starting to guess...");
-        let mut guess=0;
-        while guess<länge_eines_quadrats*länge_eines_quadrats{
-            if solutionguesser(spielfeld[0].len(), spielfeld.len(), 0, 0, &spielfeld, &mögliche_nummern, länge_eines_quadrats,guess){
-                break;
-            }
-                guess+=1;
-        }
-    }
-}
-
-fn solutionguesser(weite:usize,höhe:usize,position_weite:usize,position_höhe:usize,spielfeld:&Vec<Vec<i32>>,mögliche_nummern:&Vec<i32>,länge_eines_quadrats:usize,guess:usize)->bool{
-    let mut spielfeld_übergabe=spielfeld.clone();
-    let mut lastguess:usize=0;
-    let maxindex=get_index(weite, weite, höhe);
-    let gesamtindex=get_index(weite, position_weite, position_höhe);
-    print!("\nTiefe: {}",gesamtindex);
-    let coords_to_call=split_index(gesamtindex+1, weite);
-    let gebrauchte_nummern=get_gebrauchte_nummern(mögliche_nummern, spielfeld, länge_eines_quadrats);
-    println!("\n{}\n",maxindex);
-
-    for i in 0..spielfeld.len(){
-        for d in 0..spielfeld[i].len(){
-            
-            if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                print!(" {} |",spielfeld[i][d]);
-            }
-            else{
-                print!(" {} ",spielfeld[i][d]);
-            }
-        }
-        if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-            println!();
-            for _i in 0..spielfeld[i].len(){
-                print!("---");
-            }
-            print!("-");
-        }
         println!();
-    }
-
-
-
-
-
-
-
-    let possible_solutions=get_possible_numbers(gebrauchte_nummern[get_index(spielfeld[0].len()/länge_eines_quadrats, position_weite/länge_eines_quadrats,position_höhe/länge_eines_quadrats)].clone(), spielfeld, position_höhe, position_weite);
-    if possible_solutions.len()==0{
-        return false;
-    }
-    if spielfeld[position_höhe][position_weite]!=0&& gesamtindex<=maxindex{
-        loop{
-            if lastguess <länge_eines_quadrats*länge_eines_quadrats&&gesamtindex+1<maxindex{
-                if solutionguesser(weite, höhe, coords_to_call.1, coords_to_call.0, spielfeld, mögliche_nummern, länge_eines_quadrats, lastguess){
-                    return true;
+        for i in 0..spielfeld.len(){
+            for d in 0..spielfeld[i].len(){
+                
+                if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
+                    print!(" {} |",spielfeld[i][d]);
+                }
+                else{
+                    print!(" {} ",spielfeld[i][d]);
                 }
             }
-            else {
-                break;
-            }
-            lastguess+=1
-        }
-        return false;
-    }
-    else if maxindex==gesamtindex{
-        if possible_solutions.len()==0{
-            return false;
-        }
-        else if guess<possible_solutions.len(){
-            spielfeld_übergabe[position_höhe][position_weite]=possible_solutions[guess];
-            for i in 0..spielfeld.len(){
-                for d in 0..spielfeld[i].len(){
-                    
-                    if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                        print!(" {} |",spielfeld[i][d]);
-                    }
-                    else{
-                        print!(" {} ",spielfeld[i][d]);
-                    }
-                }
-                if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
-                    println!();
-                    for _i in 0..spielfeld[i].len(){
-                        print!("---");
-                    }
-                    print!("-");
-                }
+            if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
                 println!();
+                for _i in 0..spielfeld[i].len(){
+                    print!("---");
+                }
+                print!("-");
             }
-            return true;
+            println!();
         }
-        else{
-            return false;
-        }
+        println!("\nSolved!");
     }
     else{
-        if possible_solutions.len() == 0||guess >= possible_solutions.len(){
-            return false;
-        }
-        else{
-            spielfeld_übergabe[position_höhe][position_weite]=possible_solutions[guess];
-            loop{
-                if lastguess <länge_eines_quadrats*länge_eines_quadrats&&gesamtindex+1<maxindex{
-                    if solutionguesser(weite, höhe, position_weite, position_höhe, &spielfeld_übergabe, mögliche_nummern, länge_eines_quadrats, lastguess){
-                        return true;
-                    }
+
+        for i in 0..spielfeld.len(){
+            for d in 0..spielfeld[i].len(){
+                
+                if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
+                    print!(" {} |",spielfeld[i][d]);
                 }
-                else {
-                    break;
+                else{
+                    print!(" {} ",spielfeld[i][d]);
                 }
-                lastguess+=1
             }
-            return false;
+            if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
+                println!();
+                for _i in 0..spielfeld[i].len(){
+                    print!("---");
+                }
+                print!("-");
+            }
+            println!();
         }
+
+
+        println!("\nCouldnt finish the puzzle!");
     }
-
 }
 
-fn split_index(gesamtindex:usize,weite:usize)->(usize,usize){
-    let hoehe = gesamtindex/weite;
-    (hoehe,gesamtindex-hoehe)
-}
+
 
 fn get_gebrauchte_nummern(mögliche_nummern:&Vec<i32>,spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize)->Vec<Vec<i32>>{
     let mut gebrauchte_nummern:Vec<Vec<i32>>=Vec::new();
