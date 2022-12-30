@@ -1,15 +1,18 @@
+use crossterm::{ExecutableCommand,cursor::{MoveToPreviousLine,Hide,
+    Show}};
+use std::io::{stdout};
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,1,0,0,4,0,0,0],
-                                        vec![0,0,5,0,0,0,0,0,7],
-                                        vec![4,7,0,0,3,0,0,6,0],
-                                        vec![6,4,0,0,0,8,0,0,9],
-                                        vec![1,0,0,0,0,0,0,0,0],
-                                        vec![0,0,0,0,5,0,8,0,0],
-                                        vec![0,0,0,2,0,0,0,3,0],
-                                        vec![0,0,7,0,0,0,0,0,0],
-                                        vec![8,9,0,0,0,5,0,0,6]];
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,7,0,5,6,0,0,0],
+                                        vec![0,0,1,9,0,0,0,0,0],
+                                        vec![4,0,0,1,2,0,0,0,0],
+                                        vec![6,0,0,0,0,0,8,7,0],
+                                        vec![7,0,4,0,0,0,6,0,1],
+                                        vec![0,2,8,0,0,0,0,0,9],
+                                        vec![0,0,0,0,9,1,0,0,8],
+                                        vec![0,0,0,0,0,5,4,0,0],
+                                        vec![0,0,0,6,3,0,2,0,0]];
     let mut mögliche_nummern=Vec::new();
     for i in 1..länge_eines_quadrats*länge_eines_quadrats+1{
         mögliche_nummern.push(i as i32);
@@ -63,10 +66,13 @@ fn main() {
     else{
         print_spielfeld(&spielfeld, länge_eines_quadrats);
         println!("\nCouldnt finish the puzzle!\nNow trying to guess...\n");
+        println!("Schritte des Algorithmus:\n");
         if !solve_sudoku(&mut spielfeld, länge_eines_quadrats){
             println!("Couldnt finish it :(\n");
         }
         else{
+            println!();
+            println!();
             print_spielfeld(&spielfeld, länge_eines_quadrats);
             println!("\nThe final result!");
         }
@@ -116,6 +122,7 @@ fn get_gebrauchte_nummern(mögliche_nummern:&Vec<i32>,spielfeld:&Vec<Vec<i32>>,l
 
 fn solve_sudoku(spielfeld:&mut Vec<Vec<i32>>,länge_eines_quadrats:usize)->bool{
     for col in 0..spielfeld.len(){
+        progressbar(spielfeld.clone(), col, 20);
         for row in 0..spielfeld[0].len(){
             if spielfeld[col][row]==0{
                 for number in 0..länge_eines_quadrats*länge_eines_quadrats+1{
@@ -133,7 +140,29 @@ fn solve_sudoku(spielfeld:&mut Vec<Vec<i32>>,länge_eines_quadrats:usize)->bool{
             }
         }
     }
-    return true;
+    true
+}
+
+fn progressbar(list: impl IntoIterator,index:usize,steps:usize){
+    let mut size:usize= list.into_iter().count();
+    if size>=1{
+        size-=1;
+    }
+    let mut repeat=((index as f32/size as f32)*(steps+1)as f32) as usize;
+    if repeat >steps{
+        repeat=steps;
+    }
+    let bar=("#").repeat(repeat);
+    let empty=(" ").repeat(steps-repeat);
+    let blank=(" ").repeat((size+1).to_string().len()-(index+1).to_string().len());
+    if index==size{
+        let _r=stdout().execute(Show);
+    }
+    else if index>0{
+        let _r=stdout().execute(Hide);
+    }
+    println!("{}/{}{} : [{}{}]",index+1,size+1,blank,bar,empty);
+    let _r=stdout().execute(MoveToPreviousLine(1));
 }
 
 fn is_allowed(spielfeld:&Vec<Vec<i32>>,row:usize,col:usize,number:i32,länge_quadrat:usize)->bool{
