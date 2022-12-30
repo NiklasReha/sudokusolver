@@ -14,6 +14,9 @@ fn main() {
                                         vec![0,0,0,0,0,5,4,0,0],
                                         vec![0,0,0,6,3,0,2,0,0]];
     let mut mögliche_nummern=Vec::new();
+    println!("Inital state:\n");
+    print_spielfeld(&spielfeld, länge_eines_quadrats);
+    println!();
     for i in 1..länge_eines_quadrats*länge_eines_quadrats+1{
         mögliche_nummern.push(i as i32);
     }
@@ -43,9 +46,9 @@ fn main() {
             }
         }
         if !changed{
-            for i in 0..spielfeld.len(){
-                for d in 0..spielfeld[i].len(){
-                    if spielfeld[i][d]==0{
+            for line in &spielfeld{
+                for number in line{
+                    if *number==0{
                         solved=false;
                     }
                 }
@@ -64,48 +67,57 @@ fn main() {
         println!("\nSolved!");
     }
     else{
+        println!("State after filling in the obvious numbers:\n");
         print_spielfeld(&spielfeld, länge_eines_quadrats);
-        println!("\nCouldnt finish the puzzle!\nNow trying to guess...\n");
-        println!("Schritte des Algorithmus:\n");
+        println!("\nCouldn't finish the puzzle!\nNow trying to guess...\n");
+        println!("Search Depth:");
+        println!("￣￣￣￣￣￣");
         if !solve_sudoku(&mut spielfeld, länge_eines_quadrats){
             println!("Couldnt finish it :(\n");
         }
         else{
-            println!();
-            println!();
+            let _r=stdout().execute(MoveToPreviousLine(3));
+            println!("\nThe final result:");
+            println!("￣￣￣￣￣￣￣￣");
             print_spielfeld(&spielfeld, länge_eines_quadrats);
-            println!("\nThe final result!");
         }
-
     }
+    let mut _pause="".to_string();
+    println!("\nPress any button to exit the programm...");
+    std::io::stdin().read_line(&mut _pause).unwrap();
 }
 
-fn print_spielfeld(spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize){
-    for i in 0..spielfeld.len(){
-        for d in 0..spielfeld[i].len(){
+fn print_spielfeld(spielfeld:&[Vec<i32>],länge_eines_quadrats:usize){
+    for(i, line) in spielfeld.iter().enumerate(){
+        for (d, number) in line.iter().enumerate(){
             
             if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                print!(" {} |",spielfeld[i][d]);
+                print!(" {} ┃",number);
             }
             else{
-                print!(" {} ",spielfeld[i][d]);
+                print!(" {} ",number);
             }
         }
         if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
             println!();
-            for _i in 0..spielfeld[i].len(){
-                print!("---");
+            for _i in 0..line.len(){
+                print!("━━━");
+                if _i ==0 ||_i==line.len()-1{
+                    continue;
+                }
+                if (_i+1)%3==0{
+                    print!("╋");
+                }
             }
-            print!("-");
         }
         println!();
     }
 }
 
-fn get_gebrauchte_nummern(mögliche_nummern:&Vec<i32>,spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize)->Vec<Vec<i32>>{
+fn get_gebrauchte_nummern(mögliche_nummern:&[i32],spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize)->Vec<Vec<i32>>{
     let mut gebrauchte_nummern:Vec<Vec<i32>>=Vec::new();
     for _i in 0..spielfeld[0].len()/länge_eines_quadrats*spielfeld.len()/länge_eines_quadrats{
-        gebrauchte_nummern.push(mögliche_nummern.clone());
+        gebrauchte_nummern.push(mögliche_nummern.to_owned());
     }
 
     for i in 0..spielfeld.len(){
@@ -152,7 +164,7 @@ fn progressbar(list: impl IntoIterator,index:usize,steps:usize){
     if repeat >steps{
         repeat=steps;
     }
-    let bar=("#").repeat(repeat);
+    let bar=("▓").repeat(repeat);//▒▦░▓
     let empty=(" ").repeat(steps-repeat);
     let blank=(" ").repeat((size+1).to_string().len()-(index+1).to_string().len());
     if index==size{
@@ -161,16 +173,18 @@ fn progressbar(list: impl IntoIterator,index:usize,steps:usize){
     else if index>0{
         let _r=stdout().execute(Hide);
     }
-    println!("{}/{}{} : [{}{}]",index+1,size+1,blank,bar,empty);
-    let _r=stdout().execute(MoveToPreviousLine(1));
+    println!("  {} ┏{}┓"," ".repeat(3),"━".repeat(steps));
+    println!(" {}/{}{}: ┃{}{}┃",index+1,size+1,blank,bar,empty);
+    println!("  {} ┗{}┛"," ".repeat(3),"═".repeat(steps));
+    let _r=stdout().execute(MoveToPreviousLine(3));
 }
 
 fn is_allowed(spielfeld:&Vec<Vec<i32>>,row:usize,col:usize,number:i32,länge_quadrat:usize)->bool{
     let mut is_allowed=true;
     let  r=row-row%länge_quadrat;
     let c=col-col %länge_quadrat;
-    for i in 0..spielfeld.len(){
-        if spielfeld[i][row]==number{
+    for line in spielfeld{
+        if line[row]==number{
             is_allowed=false;
             break;
         }
@@ -182,16 +196,16 @@ fn is_allowed(spielfeld:&Vec<Vec<i32>>,row:usize,col:usize,number:i32,länge_qua
         }
     }
 
-    for i in c..c+3{
-        for d in r..r+3{
-            if spielfeld[i][d]==number{
+    for line in spielfeld.iter().skip(c).take(3){
+        for cell in line.iter().skip(r).take(3){
+            if *cell==number{
                 is_allowed=false;
                 break;
             }
         }
     }
 
-    return is_allowed;
+    is_allowed
 }
 
 
@@ -209,9 +223,9 @@ fn iscontained(number:i32,board:&[i32])->bool{
 }
 
 fn get_possible_numbers(gebrauchte_nummern:Vec<i32>,spielfeld:&Vec<Vec<i32>>,i:usize,d:usize)->Vec<i32>{
-    let mut possible_solutions=gebrauchte_nummern.clone();
-    for y in 0..spielfeld.len(){
-        let number=spielfeld[y][d];
+    let mut possible_solutions=gebrauchte_nummern;
+    for line in spielfeld{
+        let number=line[d];
         if number != 0 && iscontained(number, &possible_solutions){
             let index = possible_solutions.iter().position(|x| *x == number).unwrap();
             possible_solutions.remove(index);
