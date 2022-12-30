@@ -176,7 +176,7 @@ fn progressbar(list: impl IntoIterator,index:usize,steps:usize){
     println!("  {} ┏{}┓"," ".repeat(3),"━".repeat(steps));
     println!(" {}/{}{}: ┃{}{}┃",index+1,size+1,blank,bar,empty);
     println!("  {} ┗{}┛"," ".repeat(3),"═".repeat(steps));
-    let _r=stdout().execute(MoveToPreviousLine(3));
+        let _r=stdout().execute(MoveToPreviousLine(3));
 }
 
 fn is_allowed(spielfeld:&Vec<Vec<i32>>,row:usize,col:usize,number:i32,länge_quadrat:usize)->bool{
