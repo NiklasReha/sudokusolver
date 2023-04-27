@@ -4,8 +4,8 @@ use std::io::{stdout};
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,7,7,0,5,6,0,0,0],
-                                        vec![0,0,1,9,0,0,0,0,0],
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,0,0,5,6,0,0,0],
+                                        vec![0,0,0,9,0,0,0,0,0],
                                         vec![4,0,0,1,2,0,0,0,0],
                                         vec![6,0,0,0,0,0,8,7,0],
                                         vec![7,0,4,0,0,0,6,0,1],
@@ -85,7 +85,7 @@ fn main() {
         }
     }
     let mut _pause="".to_string();
-    println!("\nPress any button to exit the programm...");
+    print!("\nPress any button to exit the programm...");
     let _r=stdout().execute(Show);
     std::io::stdin().read_line(&mut _pause).unwrap();
 }
@@ -111,7 +111,7 @@ fn print_spielfeld(spielfeld:&[Vec<i32>],länge_eines_quadrats:usize){
                 if _i ==0 ||_i==line.len()-1{
                     continue;
                 }
-                if (_i+1)%3==0{
+                if (_i+1)%länge_eines_quadrats==0{
                     print!("╋");
                 }
             }
@@ -202,8 +202,8 @@ fn is_allowed(spielfeld:&Vec<Vec<i32>>,row:usize,col:usize,number:i32,länge_qua
         }
     }
 
-    for line in spielfeld.iter().skip(c).take(3){
-        for cell in line.iter().skip(r).take(3){
+    for line in spielfeld.iter().skip(c).take(länge_quadrat){
+        for cell in line.iter().skip(r).take(länge_quadrat){
             if *cell==number{
                 is_allowed=false;
                 break;
