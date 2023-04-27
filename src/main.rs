@@ -4,7 +4,7 @@ use std::io::{stdout};
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,0,0,5,6,0,0,0],
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![9,0,0,0,5,6,0,0,0],
                                         vec![0,0,0,9,0,0,0,0,0],
                                         vec![4,0,0,1,2,0,0,0,0],
                                         vec![6,0,0,0,0,0,8,7,0],
