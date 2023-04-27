@@ -4,7 +4,7 @@ use std::io::{stdout};
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,0,7,0,5,6,0,0,0],
+    let mut spielfeld:Vec<Vec<i32>>=vec![vec![0,7,7,0,5,6,0,0,0],
                                         vec![0,0,1,9,0,0,0,0,0],
                                         vec![4,0,0,1,2,0,0,0,0],
                                         vec![6,0,0,0,0,0,8,7,0],
@@ -73,7 +73,9 @@ fn main() {
         println!("Search Depth:");
         println!("￣￣￣￣￣￣");
         if !solve_sudoku(&mut spielfeld, länge_eines_quadrats){
-            println!("Couldnt finish it :(\n");
+            let _r=stdout().execute(MoveToPreviousLine(3));
+            println!("                       \nThe puzzle is unsolvable :(\n                               \n                                   \n                                        \n                                          \n                              ");
+            let _r=stdout().execute(MoveToPreviousLine(4));
         }
         else{
             let _r=stdout().execute(MoveToPreviousLine(3));
@@ -84,18 +86,22 @@ fn main() {
     }
     let mut _pause="".to_string();
     println!("\nPress any button to exit the programm...");
+    let _r=stdout().execute(Show);
     std::io::stdin().read_line(&mut _pause).unwrap();
 }
 
 fn print_spielfeld(spielfeld:&[Vec<i32>],länge_eines_quadrats:usize){
     for(i, line) in spielfeld.iter().enumerate(){
         for (d, number) in line.iter().enumerate(){
-            
-            if (d+1)%länge_eines_quadrats==0&& d+1<länge_eines_quadrats*länge_eines_quadrats{
-                print!(" {} ┃",number);
+            let mut zahl_zu_drucken=" ".to_string();
+            if *number != 0{
+                zahl_zu_drucken=number.to_string();
+            }
+            if (d+1)%länge_eines_quadrats == 0 && d+1 < länge_eines_quadrats*länge_eines_quadrats{
+                print!(" {} ┃",zahl_zu_drucken);
             }
             else{
-                print!(" {} ",number);
+                print!(" {} ",zahl_zu_drucken);
             }
         }
         if (i+1)%länge_eines_quadrats==0&& i+1<länge_eines_quadrats*länge_eines_quadrats{
