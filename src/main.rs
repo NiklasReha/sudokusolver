@@ -1,18 +1,19 @@
 use crossterm::{ExecutableCommand,cursor::{MoveToPreviousLine,Hide,
     Show}};
-use std::io::{stdout};
+use std::io::stdout;
 fn main() {
     let länge_eines_quadrats=3;
     let mut solved =true;
-    let mut spielfeld:Vec<Vec<i32>>=vec![vec![9,0,0,0,5,6,0,0,0],
+    let mut spielfeld:Vec<Vec<i32>>=vec![
+                                        vec![6,7,0,0,0,0,0,1,3],
                                         vec![0,0,0,9,0,0,0,0,0],
-                                        vec![4,0,0,1,2,0,0,0,0],
-                                        vec![6,0,0,0,0,0,8,7,0],
-                                        vec![7,0,4,0,0,0,6,0,1],
-                                        vec![0,2,8,0,0,0,0,0,9],
-                                        vec![0,0,0,0,9,1,0,0,8],
-                                        vec![0,0,0,0,0,5,4,0,0],
-                                        vec![0,0,0,6,3,0,2,0,0]];
+                                        vec![0,0,0,0,0,4,6,9,0],
+                                        vec![0,2,1,7,0,3,0,0,0],
+                                        vec![0,0,0,6,4,8,0,0,0],
+                                        vec![0,0,0,0,0,0,0,5,0],
+                                        vec![0,0,0,0,0,0,0,0,0],
+                                        vec![0,0,0,0,2,0,0,7,5],
+                                        vec![0,8,0,3,0,9,0,2,0]];
     let mut mögliche_nummern=Vec::new();
     println!("Inital state:\n");
     print_spielfeld(&spielfeld, länge_eines_quadrats);
@@ -120,7 +121,7 @@ fn print_spielfeld(spielfeld:&[Vec<i32>],länge_eines_quadrats:usize){
     }
 }
 
-fn get_gebrauchte_nummern(mögliche_nummern:&[i32],spielfeld:&Vec<Vec<i32>>,länge_eines_quadrats:usize)->Vec<Vec<i32>>{
+fn get_gebrauchte_nummern(mögliche_nummern:&[i32],spielfeld:& [Vec<i32>],länge_eines_quadrats:usize)->Vec<Vec<i32>>{
     let mut gebrauchte_nummern:Vec<Vec<i32>>=Vec::new();
     for _i in 0..spielfeld[0].len()/länge_eines_quadrats*spielfeld.len()/länge_eines_quadrats{
         gebrauchte_nummern.push(mögliche_nummern.to_owned());
